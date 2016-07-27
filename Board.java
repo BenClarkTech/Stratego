@@ -1,6 +1,15 @@
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import java.util.Arrays;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
@@ -10,11 +19,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.Box.Filler;
+import javax.swing.JInternalFrame;
+
 import java.io.File;
 import java.io.IOException;
-import java.awt.Color;
 
-public class Board {
+
+public class Board extends JFrame 
+implements MouseListener, MouseMotionListener {
 	public String Winner = "";
 	public Piece[][] Squares = new Piece[10][10];
 	public String Turn;
@@ -23,6 +35,7 @@ public class Board {
 	public int[] Pools = new int[22];
 	public JFrame Window;
 	public GamePanel Canvas;
+	
 
 	public Board()
 	{
@@ -33,7 +46,10 @@ public class Board {
 		Window.setResizable(false);
 		Window.pack();
 		Window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		Window.setVisible( true );	
+		Window.setVisible( true );
+		addMouseListener(this);
+		Window.addMouseListener(this);
+		Window.addMouseMotionListener(this);
 		Turn = "Blue";
 		for(int i=0; i<10; i++)
 		{
@@ -48,8 +64,80 @@ public class Board {
 		Flip();
 	}
 	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		System.out.println("Mouse Clicked at X: " + x + " - Y: " + y);
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		int x = e.getX();
+	    int y = e.getY();
+	    System.out.println("Mouse Entered frame at X: " + x + " - Y: " + y);
+	}
+
+	@Override
+	 public void mouseExited(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		System.out.println("Mouse Exited frame at X: " + x + " - Y: " + y);
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		System.out.println("Mouse Pressed at X: " + x + " - Y: " + y);
+	 }
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		System.out.println("Mouse Released at X: " + x + " - Y: " + y);
+	}
+		
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		int xmove = e.getX();
+		int ymove = e.getY();
+		//System.out.println("Mouse Moved at X: " + xmove + " - Y: " + ymove);
+		    }
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		int xdrag = e.getX();
+		int ydrag = e.getY();
+		//System.out.println("Mouse Dragged at X: " + xdrag + " - Y: " + ydrag);
+	}
+	
 	public void SetupMatch()
 	{
+        String[] pieces = {
+                "B","B","B","B","B","B", /*Bombs*/
+                "1","2","3","3",         /*Marshal, General, Colonels*/
+                "4","4","4",             /*Majors*/
+                "5","5","5","5",         /*Captians*/
+                "6","6","6","6",         /*Lieutenants*/
+                "7","7","7","7",         /*Sergant*/
+                "8","8","8","8","8",     /*Miner*/
+                "9","9","9","9","9","9","9","9", /*Scouts*/
+                "S", "F"};               /*Spy, Flag*/
+        ArrayList<String> p1pieces = new ArrayList<String>(Arrays.asList(pieces));
+        ArrayList<String> p2pieces = new ArrayList<String>(Arrays.asList(pieces));
+
+        
+        /*JInternalFrame frame = new JInternalFrame( 
+                "Internal Frame", true, true, true, true ); 
+        System.out.println("MAKING JFRAME");
+        frame.setTitle("Picture");
+        JPanel pan = new JPanel();
+        Window.add(pan);
+        Window.add(frame);
+        frame.setSize(300, 200);
+        pan.setVisible( true );
+        frame.setVisible( true ); // show internal frame*/
 		
 	}
 	
@@ -126,6 +214,7 @@ public class Board {
 }
 
 class GamePanel extends JPanel {
+	public static final Object[][] PiecePanel = null;
 	public Piece BLANK_PIECE;
 	public BufferedImage bgImage;
 	public PiecePanel[][] grid = new PiecePanel[10][10];
@@ -167,7 +256,7 @@ class GamePanel extends JPanel {
 			Collumn[i] = Box.createHorizontalBox();
 			Collumn[i].add(Box.createRigidArea(new Dimension(CollumnWs[i],CollumnHs[i])));
 		}
-		//Left Collumn Pool Additions 
+		//Left Column Pool Additions 
 		Collumn[1].add(nums[0]);
 		Collumn[1].add(nums[9]);
 		Collumn[1].add(nums[8]);
